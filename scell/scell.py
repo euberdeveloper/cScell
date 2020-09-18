@@ -19,9 +19,10 @@ SH_HELP_HANDLER_PARAMETER_TEMPLATE = f'{__dirname}/templates/sh_help_handler_par
 SH_HANDLE_COMMAND_TEMPLATE = f'{__dirname}/templates/sh_handle_command.template.txt'
 SH_HANDLE_COMMAND_CONDITION_TEMPLATE = f'{__dirname}/templates/sh_handle_command_condition.template.txt'
 SH_HANDLE_COMMAND_ARRAY_ASSIGNMENT_TEMPLATE = f'{__dirname}/templates/sh_handle_command_array_assignment.template.txt'
-SH_COMPILER_TEMPLATE = f'{__dirname}/templates/sh_compiler_template.txt'
-HANDLERS_H_TEMPLATE = f'{__dirname}/templates/handlers_h_template.txt'
-HANDLERS_C_TEMPLATE = f'{__dirname}/templates/handlers_c_template.txt'
+SH_COMPILER_TEMPLATE = f'{__dirname}/templates/sh_compiler.template.txt'
+HANDLERS_H_TEMPLATE = f'{__dirname}/templates/handlers_h.template.txt'
+HANDLERS_C_TEMPLATE = f'{__dirname}/templates/handlers_c.template.txt'
+MAIN_TEMPLATE = f'{__dirname}/templates/main.template.txt'
 
 # Utils functions
 
@@ -349,11 +350,11 @@ def generate_handlers_c_function(command_name: str, command_details: dict):
     function_name = command_details.get('function')
     arguments = command_details.get('arguments')
     arguments = arguments if arguments is not None else {}
-    arguments_str = get_function_arguments(arguments)
+    params = get_function_params(arguments)
 
     return (
-        f'SH_STATE {function_name}({arguments_str}) {{\n\t'
-        f'printf("{command_name}");\n'
+        f'SH_STATE {function_name}({params}) {{\n\t'
+        f'printf("{command_name}\n");\n'
         '}'
     )
 
@@ -364,6 +365,13 @@ def generate_handlers_c_functions(commands: dict):
 def generate_handlers_c_file(commands: dict):
     functions = generate_handlers_c_functions(commands)
     return handlers_c_template.format(functions=functions)
+
+# Generate main file
+
+def generate_main_file(commands: dict):
+    should_handle_arguments = '_arguments' in commands.keys()
+    handle_arguments = '/* Handle command line arguments */\n\tsh_handle__arguments(argv, argc);' if should_handle_arguments else ''
+    return main_template.format(handle_arguments=handle_arguments)
 
 # Generate sh compiler file
 
@@ -426,6 +434,10 @@ def generate_scell(app_name: str = 'scell_project', json_commands_path: str = '.
     with open(HANDLERS_C_TEMPLATE) as handlers_c_template_file:
         global handlers_c_template
         handlers_c_template = handlers_c_template_file.read()
+
+    with open(MAIN_TEMPLATE) as main_template_file:
+        global main_template
+        main_template = main_template_file.read()
         
     # Read json file
 
@@ -471,6 +483,11 @@ def generate_scell(app_name: str = 'scell_project', json_commands_path: str = '.
     handlers_c_output = f'{str(TARGET_PATH)}/handlers/handlers.c'
     with open(handlers_c_output, 'w') as handlers_c_output_file:
         handlers_c_output_file.write(generate_handlers_c_file(commands))
+
+    # Generate main file
+    main_output = f'{str(TARGET_PATH)}/{app_name}.c'
+    with open(main_output, 'w') as main_output_file:
+        main_output_file.write(generate_main_file(commands))
 
     # Generate shell compiler file
     sh_compiler_output = f'{str(TARGET_PATH)}/compile.sh'

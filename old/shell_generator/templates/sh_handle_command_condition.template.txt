@@ -1,0 +1,7 @@
+{condition} {{
+    {check_noval}
+    if (!finish) {{
+        {assign_is_assigned}
+        {assign_argument}         
+    }}
+}}

@@ -1,0 +1,5 @@
+details[{index}].name = {name};
+details[{index}].alias = {alias};
+details[{index}].type = {type};
+details[{index}].default_value = {default_value};
+details[{index}].description = {description};

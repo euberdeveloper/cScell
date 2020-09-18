@@ -2,13 +2,13 @@ from distutils.core import setup
 setup(
   name = 'cScell',
   packages = ['cScell'],
-  version = '0.0.5',
+  version = '0.0.6',
   license='MIT',
   description = 'A framework made with python for C cli projects',
   author = 'Eugenio Vinicio Berretta',
   author_email = 'euberdeveloper@gmail.com',
   url = 'https://github.com/euberdeveloper/cScell',
-  download_url = 'https://github.com/euberdeveloper/cScell/archive/v0.0.5.tar.gz',
+  download_url = 'https://github.com/euberdeveloper/cScell/archive/v0.0.6.tar.gz',
   keywords = ['cScell', 'shell', 'c', 'framework'],
   classifiers=[
     'Development Status :: 5 - Production/Stable',

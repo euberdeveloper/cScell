@@ -20,6 +20,8 @@ SH_HANDLE_COMMAND_TEMPLATE = f'{__dirname}/templates/sh_handle_command.template.
 SH_HANDLE_COMMAND_CONDITION_TEMPLATE = f'{__dirname}/templates/sh_handle_command_condition.template.txt'
 SH_HANDLE_COMMAND_ARRAY_ASSIGNMENT_TEMPLATE = f'{__dirname}/templates/sh_handle_command_array_assignment.template.txt'
 SH_COMPILER_TEMPLATE = f'{__dirname}/templates/sh_compiler_template.txt'
+HANDLERS_H_TEMPLATE = f'{__dirname}/templates/handlers_h_template.txt'
+HANDLERS_C_TEMPLATE = f'{__dirname}/templates/handlers_c_template.txt'
 
 # Utils functions
 
@@ -325,15 +327,43 @@ def generate_c_file(name: str, commands: dict):
 
 # Generate handlers header file
 
-def generate_handlers_header_file(app_name: str):
-    pass
-    #return sh_compiler_template.format(app_name=app_name)
+def generate_handlers_h_function(command_details: dict):
+    function_name = command_details.get('function')
+    arguments = command_details.get('arguments')
+    arguments = arguments if arguments is not None else {}
+    params = get_function_params(arguments)
+
+    return f'SH_STATE {function_name}({params});'
+
+def generate_handlers_h_functions(commands: dict):
+    functions = [generate_handlers_h_function(command_details) for _, command_details in commands.items()]
+    return '\n'.join(functions)
+
+def generate_handlers_h_file(commands: dict):
+    functions = generate_handlers_h_functions(commands)
+    return handlers_h_template.format(functions=functions)
 
 # Generate handlers c file
 
-def generate_handlers_c_file(app_name: str):
-    pass
-    #return sh_compiler_template.format(app_name=app_name)
+def generate_handlers_c_function(command_name: str, command_details: dict):
+    function_name = command_details.get('function')
+    arguments = command_details.get('arguments')
+    arguments = arguments if arguments is not None else {}
+    arguments_str = get_function_arguments(arguments)
+
+    return (
+        f'SH_STATE {function_name}({arguments_str}) {{\n\t'
+        f'printf("{command_name}");\n'
+        '}'
+    )
+
+def generate_handlers_c_functions(commands: dict):
+    functions = [generate_handlers_c_function(command_name, command_details) for command_name, command_details in commands.items()]
+    return '\n'.join(functions)
+
+def generate_handlers_c_file(commands: dict):
+    functions = generate_handlers_c_functions(commands)
+    return handlers_c_template.format(functions=functions)
 
 # Generate sh compiler file
 
@@ -388,6 +418,14 @@ def generate_scell(app_name: str = 'scell_project', json_commands_path: str = '.
     with open(SH_COMPILER_TEMPLATE) as sh_compiler_file:
         global sh_compiler_template
         sh_compiler_template = sh_compiler_file.read()
+
+    with open(HANDLERS_H_TEMPLATE) as handlers_h_template_file:
+        global handlers_h_template
+        handlers_h_template = handlers_h_template_file.read()
+
+    with open(HANDLERS_C_TEMPLATE) as handlers_c_template_file:
+        global handlers_c_template
+        handlers_c_template = handlers_c_template_file.read()
         
     # Read json file
 
@@ -400,7 +438,7 @@ def generate_scell(app_name: str = 'scell_project', json_commands_path: str = '.
     TARGET_PATH = Path(OUTPUT_PATH, APP_NAME)
     TARGET_PATH.mkdir(parents=True, exist_ok=True)
 
-    # Copy shell utils to project dir
+    # Copy shell utils to project dir and create other folders
 
     SCELL_UTILS_FROM_PATH = Path(__dirname, 'scellutils')
     SCELL_UTILS_TO_PATH = Path(TARGET_PATH, 'scellutils')
@@ -409,6 +447,9 @@ def generate_scell(app_name: str = 'scell_project', json_commands_path: str = '.
         shutil.rmtree(SCELL_UTILS_TO_PATH)
     
     shutil.copytree(SCELL_UTILS_FROM_PATH, SCELL_UTILS_TO_PATH)
+
+    Path(TARGET_PATH, 'scellutils', 'shell_commands').mkdir(parents=True, exist_ok=True)
+    Path(TARGET_PATH, 'handlers').mkdir(parents=True, exist_ok=True)
 
     # Generate header file
 
@@ -420,6 +461,16 @@ def generate_scell(app_name: str = 'scell_project', json_commands_path: str = '.
     c_output = f'{str(TARGET_PATH)}/scellutils/shell_commands/shell_commands.c'
     with open(c_output, 'w') as c_output_file:
         c_output_file.write(generate_c_file('shell_commands', commands)) 
+
+    # Generate handlers h file
+    handlers_h_output = f'{str(TARGET_PATH)}/handlers/handlers.h'
+    with open(handlers_h_output, 'w') as handlers_h_output_file:
+        handlers_h_output_file.write(generate_handlers_h_file(commands))
+
+    # Generate handlers c file
+    handlers_c_output = f'{str(TARGET_PATH)}/handlers/handlers.c'
+    with open(handlers_c_output, 'w') as handlers_c_output_file:
+        handlers_c_output_file.write(generate_handlers_c_file(commands))
 
     # Generate shell compiler file
     sh_compiler_output = f'{str(TARGET_PATH)}/compile.sh'

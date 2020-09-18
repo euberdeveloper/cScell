@@ -1,7 +1,3 @@
-setup.cfg
-setup.py
-cScell/__init__.py
-cScell/__main__.py
-cScell/cScell.py
 recursive-include cScell/templates *
 recursive-include cScell/scellutils *
+include README.md

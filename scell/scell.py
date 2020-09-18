@@ -381,9 +381,9 @@ def generate_sh_compiler_file(app_name: str):
 # Exported functions
 
 def generate_scell(app_name: str = 'scell_project', json_commands_path: str = './commands.json', output_path: str = './'):
-    APP_NAME = app_name
-    JSON_COMMANDS = json_commands_path
-    OUTPUT_PATH = output_path
+    APP_NAME = app_name if app_name else 'scell_project'
+    JSON_COMMANDS = json_commands_path if json_commands_path else './commands.json'
+    OUTPUT_PATH = output_path if output_path else './'
 
     # Read template files
 

@@ -1,0 +1,45 @@
+{
+    "_arguments": {
+        "function": "arguments",
+        "arguments": {
+            "a": {
+                "type": "int"
+            }
+        }
+    },
+    "add": {
+        "function": "init",
+        "arguments": {
+            "first": {
+                "type": "int",
+                "alias": "x",
+                "description": "The number of P processes. It must be at least 1."
+            },
+            "second": {
+                "type": "int",
+                "alias": "y",
+                "description": "The number of Q processes. It must be at least 1."
+            }
+        },
+        "description": "Initializes the shit"
+    },
+    "sub": {
+        "function": "sub",
+        "arguments": {
+            "first": {
+                "type": "int",
+                "alias": "x",
+                "description": "The number of P processes. It must be at least 1."
+            },
+            "second": {
+                "type": "int",
+                "alias": "y",
+                "description": "The number of Q processes. It must be at least 1."
+            }
+        },
+        "description": "Initializes the shit"
+    },
+    "quit": {
+        "function": "quit"
+    }
+}

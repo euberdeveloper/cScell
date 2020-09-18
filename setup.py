@@ -2,13 +2,13 @@ from distutils.core import setup
 setup(
   name = 'scell',
   packages = ['scell'],
-  version = '0.0.2',
+  version = '0.0.3',
   license='MIT',
   description = 'A framework made with python for C cli projects',
   author = 'Eugenio Vinicio Berretta',
   author_email = 'euberdeveloper@gmail.com'
-  url = 'https://github.com/euberdeveloper/euberdeveloper',
-  download_url = 'https://github.com/euberdeveloper/scell/archive/v0.0.2.tar.gz',
+  url = 'https://github.com/euberdeveloper/scell',
+  download_url = 'https://github.com/euberdeveloper/scell/archive/v0.0.3.tar.gz',
   keywords = ['scell', 'shell', 'c', 'framework'],
   classifiers=[
     'Development Status :: 5 - Production/Stable',

@@ -354,7 +354,7 @@ def generate_handlers_c_function(command_name: str, command_details: dict):
 
     return (
         f'SH_STATE {function_name}({params}) {{\n\t'
-        f'printf("{command_name}\n");\n'
+        f'printf("{command_name}\\n");\n'
         '}'
     )
 

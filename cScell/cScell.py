@@ -485,12 +485,12 @@ def generate_scell(app_name: str = 'scell_project', json_commands_path: str = '.
         handlers_c_output_file.write(generate_handlers_c_file(commands))
 
     # Generate main file
-    main_output = f'{str(TARGET_PATH)}/{app_name}.c'
+    main_output = f'{str(TARGET_PATH)}/{APP_NAME}.c'
     with open(main_output, 'w') as main_output_file:
         main_output_file.write(generate_main_file(commands))
 
     # Generate shell compiler file
     sh_compiler_output = f'{str(TARGET_PATH)}/compile.sh'
     with open(sh_compiler_output, 'w') as sh_compiler_file:
-        sh_compiler_file.write(generate_sh_compiler_file(app_name))
+        sh_compiler_file.write(generate_sh_compiler_file(APP_NAME))
 

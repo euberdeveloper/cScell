@@ -2,13 +2,13 @@ from setuptools import setup
 setup(
   name = 'cScell',
   packages = ['cScell'],
-  version = '0.0.16',
+  version = '0.0.17',
   license='MIT',
   description = 'A framework made with python for C cli projects',
   author = 'Eugenio Vinicio Berretta',
   author_email = 'euberdeveloper@gmail.com',
   url = 'https://github.com/euberdeveloper/cScell',
-  download_url = 'https://github.com/euberdeveloper/cScell/archive/v0.0.16.tar.gz',
+  download_url = 'https://github.com/euberdeveloper/cScell/archive/v0.0.17.tar.gz',
   package_data={'cScell': ['templates/*.txt']},
   include_package_data=True,
   entry_points = {

@@ -1,6 +1,10 @@
 # cScell
 A framework written with python, in order to quickly create C shell projects on Linux envinronment.
 
+<p align="center">
+  <img src="https://github.com/euberdeveloper/cScell/raw/master/docs/example.gif">
+</p>
+
 ## Install
 
 **Note**: this package is thought to be used by **Linux** platforms.

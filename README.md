@@ -2,7 +2,9 @@
 A framework written with python, in order to quickly create C shell projects on Linux envinronment.
 
 <p align="center">
-  <img src="https://github.com/euberdeveloper/cScell/raw/master/docs/example.gif">
+    <a href="https://github.com/euberdeveloper/cScell/blob/master/docs/example.gif">
+        <img src="https://github.com/euberdeveloper/cScell/raw/master/docs/example.gif">
+    </a>
 </p>
 
 ## Install

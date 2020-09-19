@@ -75,6 +75,91 @@ In the commands json file:
 * For **each argument value**, the key `description` is not mandatory. It is the displayed **description for the argument** when the command **help** is executed.
 * For **each command**, the key `description` is not mandatory. It is the displayed **description for the command** when the command **help** is executed.
 
+An example:
+
+```json
+{
+    "promptSymbol": ">>>",
+    "_arguments": {
+        "function": "arguments",
+        "arguments": {
+            "thing": {
+                "type": "int",
+                "alias": "t",
+                "default": 1,
+                "min": 0,
+                "description": "The thing argument description"
+            },
+            "stuff": {
+                "type": "float",
+                "alias": "s",
+                "max": 10,
+                "description": "The stuff argument description"
+            },
+            "ware": {
+                "type": "array<char*>",
+                "alias": "w",
+                "default": "NULL",
+                "description": "The ware argument description"
+            }
+        }
+    },
+    "increment": {
+        "function": "inc",
+        "arguments": {
+            "number": {
+                "type": "int",
+                "alias": "n",
+                "description": "The number to increment"
+            },
+            "amount": {
+                "type": "int",
+                "alias": "a",
+                "default": 1,
+                "description": "How much will the number incremented"
+            }
+        },
+        "description": "Increments a number"
+    },
+    "add": {
+        "function": "add",
+        "arguments": {
+            "first": {
+                "type": "int",
+                "alias": "x",
+                "description": "The first addend"
+            },
+            "second": {
+                "type": "int",
+                "alias": "y",
+                "description": "The second addend"
+            }
+        },
+        "description": "Adds two addends"
+    },
+    "concat": {
+        "function": "concat",
+        "arguments": {
+            "strings": {
+                "type": "array<char*>",
+                "default": "NULL",
+                "description": "The strings to concat"
+            },
+            "reverse": {
+                "type": "bool",
+                "alias": "r",
+                "description": "If the strings will be in reversed order"
+            }
+        },
+        "description": "Concats an array of strings"
+    },
+    "quit": {
+        "function": "quit",
+        "description": "closes the program"
+    }
+}
+```
+
 ## Result
 
 At the end of execution, a **project folder** called as you specified for the `app_name` argument will be created in the `output_dir_path` that you specified.
@@ -111,13 +196,20 @@ You should **edit** the `handlers.c` file to define the behaviour of each comman
 
 Under the hood:
 * All arguments containing **hyphens** in the name will be purged with **underscores**.
-* If the `_arguments` command was defined, if the users passes **command line arguments** they will be parsed and the **arguments** handler executed.
+* If the `_arguments` command was defined, if the users passes **command line arguments** they will be parsed and the corrispondent handler executed.
 * An **infinite loop** that **listens** for the user's commands will be then executed.
 * All **empty prompted lines** will be ignored.
 * After a command is prompted, the program will **check if the command exists**. If not, it will **display a proper error message**.
 * If the command exists, it will be **properly** parsed.
 * If a **required argument** misses, a **value** is invalid, a **value** misses or does not matches **provided numerical ranges**, an error will be displayed.
 * The **extended** argument names should be preceded by two hyphens `--` while the **aliased** argument names by a single hyphen `-`.
-* 
+* If a **value without argument** will be passed, a warning will be displayed, but it will not block the command.
+* If all checks pass and the command is correctly parsed, the corrispondent **handler function** is called with the parsed arguments. You can easily **edit** the `handlers.c` file and implement the handlers, which by default print the command name.
+* If the `help` command is prompted, the documentation for all the commands will be displayed
+* If the `help [command]` command is prompted, the documentation for the given command will be displayed
 
-Under the hood, the generated program **executes an infinite loop** .   If it exists, the **passed arguments**  All
+## Notes
+
+* This framework works only for **Linux**.
+* Only **named** arguments are allowed. This means that all commands will be like `add -x 1 -y 2` or `concat --strings first second third` but commands like `add 1 2` will not be allowed.
+* If a string parameter **contains spaces**, you can include it inside double apix such as `concat --strings "first string" "second string"`
